@@ -9,7 +9,7 @@ import "./App.css";
 
 const client = StreamChat.getInstance(process.env.REACT_APP_STREAM_API_KEY);
 
-function App() {
+const App = () => {
   return (
     <div className='app__wrapper'>
       <Chat client={client}>
@@ -18,6 +18,6 @@ function App() {
       </Chat>
     </div>
   );
-}
+};
 
 export default App;
