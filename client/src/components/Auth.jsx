@@ -4,6 +4,8 @@ import axios from "axios";
 
 import signinImage from "../assets/signup.jpg";
 
+const cookies = new Cookies();
+
 const initialState = {
   fullName: "",
   username: "",
@@ -21,9 +23,34 @@ const Auth = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  //When Signup or Signin is submitted, Data is sent to server and the response is saved in the cookies
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
+    const { fullName, username, password, phoneNumber, avatarURL } = form;
+    const URL = "http://localhost:5000/auth";
+
+    const {
+      data: { token, userId, hashedPassword },
+    } = await axios.post(`${URL}/${isSignup ? "signup" : "login"}`, {
+      fullName,
+      username,
+      password,
+      phoneNumber,
+      avatarURL,
+    });
+
+    cookies.set("token", token);
+    cookies.set("username", username);
+    cookies.set("fullName", fullName);
+    cookies.set("userId", userId);
+
+    if (isSignup) {
+      cookies.set("hashedPassword", hashedPassword);
+      cookies.set("phoneNumber", phoneNumber);
+      cookies.set("avatarURL", avatarURL);
+    }
+
+    window.location.reload();
   };
 
   const switchMode = () => {
@@ -39,69 +66,33 @@ const Auth = () => {
             {isSignup && (
               <div className='auth__form-container_fields-content_input'>
                 <label htmlFor='fullName'>Full Name</label>
-                <input
-                  name='fullName'
-                  type='text'
-                  placeholder='Full Name'
-                  onChange={handleChange}
-                  required
-                />
+                <input name='fullName' type='text' placeholder='Full Name' onChange={handleChange} required />
               </div>
             )}
             <div className='auth__form-container_fields-content_input'>
               <label htmlFor='username'>Username</label>
-              <input
-                name='username'
-                type='text'
-                placeholder='Username'
-                onChange={handleChange}
-                required
-              />
+              <input name='username' type='text' placeholder='Username' onChange={handleChange} required />
             </div>
             <div className='auth__form-container_fields-content_input'>
               <label htmlFor='password'>Password</label>
-              <input
-                name='password'
-                type='password'
-                placeholder='Password'
-                onChange={handleChange}
-                required
-              />
+              <input name='password' type='password' placeholder='Password' onChange={handleChange} required />
             </div>
             {isSignup && (
               <div className='auth__form-container_fields-content_input'>
                 <label htmlFor='confirmPassword'>Confirm Password</label>
-                <input
-                  name='confirmPassword'
-                  type='password'
-                  placeholder='Confirm Password'
-                  onChange={handleChange}
-                  required
-                />
+                <input name='confirmPassword' type='password' placeholder='Confirm Password' onChange={handleChange} required />
               </div>
             )}
             {isSignup && (
               <div className='auth__form-container_fields-content_input'>
                 <label htmlFor='phoneNumber'>Phone Number</label>
-                <input
-                  name='phoneNumber'
-                  type='text'
-                  placeholder='Phone Number'
-                  onChange={handleChange}
-                  required
-                />
+                <input name='phoneNumber' type='text' placeholder='Phone Number' onChange={handleChange} required />
               </div>
             )}
             {isSignup && (
               <div className='auth__form-container_fields-content_input'>
                 <label htmlFor='avatarURL'>Avatar URL</label>
-                <input
-                  name='avatarURL'
-                  type='text'
-                  placeholder='Avatar URL'
-                  onChange={handleChange}
-                  required
-                />
+                <input name='avatarURL' type='text' placeholder='Avatar URL' onChange={handleChange} required />
               </div>
             )}
             <div className='auth__form-container_fields-content_button'>
