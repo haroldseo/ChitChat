@@ -1,5 +1,6 @@
 import React from "react";
 import { Channel, useChatContext, MessageSimple } from "stream-chat-react";
+//Replace MessageSimple with Custom Message
 
 import { ChannelInner, CreateChannel, EditChannel } from "./";
 
